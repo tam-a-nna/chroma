@@ -1,0 +1,146 @@
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ArrayListCollection {
+
+    public static void main(String[] args) {
+        ArrayList<String> items = new ArrayList<>(); // Create ArrayList to store colors
+        Scanner scanner = new Scanner(System.in);
+        int choice; // Variable to store user input
+
+        do {
+            // Display updated menu options
+            System.out.println("\nChroma Organizer:");
+            System.out.println("1. Add Colour");
+            System.out.println("2. Add Colour at Specific Index");
+            System.out.println("3. Remove Colour");
+            System.out.println("4. Remove Colour by Index");
+            System.out.println("5. Display List");
+            System.out.println("6. Clear List");
+            System.out.println("7. Check if List Contains Colour");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
+
+            // Ensure valid input
+            while (!scanner.hasNextInt()) {
+                System.out.println("Please enter a valid integer.");
+                scanner.next(); // clear invalid input
+            }
+            choice = scanner.nextInt(); // Read user choice
+            scanner.nextLine(); // Clear the buffer
+
+            switch (choice) {
+                case 1: // Add colour(s)
+                    System.out.println("1. Add a Single Colour");
+                    System.out.println("2. Add a Predefined List of Colours");
+                    System.out.print("Enter your choice: ");
+                    int addChoice = scanner.nextInt();
+                    scanner.nextLine(); // Clear the buffer
+
+                    if (addChoice == 1) {
+                        System.out.print("Enter a colour to add: ");
+                        String colourToAdd = scanner.nextLine();
+                        items.add(colourToAdd);
+                        System.out.println(colourToAdd + " added to the list.");
+                    } else if (addChoice == 2) {
+                        // Adding predefined colours to the list
+                        String[] predefinedColours = {"Red", "Green", "Blue", "Yellow", "Orange"};
+                        for (String colour : predefinedColours) {
+                            items.add(colour);
+                        }
+                        System.out.println("Predefined colours added to the list: Red, Green, Blue, Yellow, Orange.");
+                    } else {
+                        System.out.println("Invalid choice. Please try again.");
+                    }
+                    break;
+
+                case 2: // Add a colour at a specific index
+                    System.out.print("Enter a colour to add: ");
+                    String colourToAddAtIndex = scanner.nextLine();
+                    System.out.print("Enter index to add at (0 to " + items.size() + "): ");
+                    int indexToAdd = scanner.nextInt();
+                    scanner.nextLine(); // Clear buffer
+                    if (indexToAdd >= 0 && indexToAdd <= items.size()) {
+                        items.add(indexToAdd, colourToAddAtIndex);
+                        System.out.println(colourToAddAtIndex + " added at index " + indexToAdd + ".");
+                    } else {
+                        System.out.println("Invalid index.");
+                    }
+                    break;
+
+                case 3: // Remove a colour by name
+                    if (!items.isEmpty()) {
+                        System.out.print("Enter a colour to remove: ");
+                        String colourToRemove = scanner.nextLine();
+                        if (items.remove(colourToRemove)) {
+                            System.out.println(colourToRemove + " removed from the list.");
+                        } else {
+                            System.out.println(colourToRemove + " not found in the list.");
+                        }
+                    } else {
+                        System.out.println("List is empty.");
+                    }
+                    break;
+
+                case 4: // Remove a colour by index
+                    if (!items.isEmpty()) {
+                        System.out.print("Enter index to remove (0 to " + (items.size() - 1) + "): ");
+                        int indexToRemove = scanner.nextInt();
+                        scanner.nextLine(); // Clear buffer
+                        if (indexToRemove >= 0 && indexToRemove < items.size()) {
+                            String removedColour = items.remove(indexToRemove);
+                            System.out.println(removedColour + " removed from index " + indexToRemove + ".");
+                        } else {
+                            System.out.println("Invalid index.");
+                        }
+                    } else {
+                        System.out.println("List is empty.");
+                    }
+                    break;
+
+                case 5: // Display the list
+                    display(items, "Current List:");
+                    break;
+
+                case 6: // Clear the list
+                    items.clear();
+                    System.out.println("List cleared.");
+                    break;
+
+                case 7: // Check if list contains a specific colour
+                    System.out.print("Enter a colour to check: ");
+                    String colourToCheck = scanner.nextLine();
+                    if (items.contains(colourToCheck)) {
+                        System.out.println(colourToCheck + " is in the list.");
+                    } else {
+                        System.out.println(colourToCheck + " is not in the list.");
+                    }
+                    break;
+
+                case 8: // Exit
+                    System.out.println("Exiting...");
+                    break;
+
+                default: // Handle invalid input
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (choice != 8); // Repeat until user chooses to exit
+
+        scanner.close();
+    }
+
+    // Method to display the list
+    public static void display(ArrayList<String> items, String header) {
+        System.out.printf("%s", header);
+        if (items.isEmpty()) {
+            System.out.println(" List is empty.");
+        } else {
+            for (String item : items) {
+                System.out.printf(" %s", item);
+            }
+            System.out.println();
+        }
+    }
+}
