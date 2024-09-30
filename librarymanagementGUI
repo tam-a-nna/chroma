@@ -1,0 +1,135 @@
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class LibraryManagementGUI {
+
+    private Library library;
+    private JTextArea displayArea;
+    private JTextField titleField;
+    private JTextField authorField;
+
+    public LibraryManagementGUI() {
+        library = new Library();
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        JFrame frame = new JFrame("Library Management System");
+        frame.setSize(400, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout());
+
+        JLabel titleLabel = new JLabel("Book Title:");
+        titleField = new JTextField(15);
+
+        JLabel authorLabel = new JLabel("Book Author:");
+        authorField = new JTextField(15);
+
+        JButton addButton = new JButton("Add Book");
+        JButton issueButton = new JButton("Issue Book");
+        JButton returnButton = new JButton("Return Book");
+        JButton displayButton = new JButton("Display Books");
+
+        // Color buttons
+        JButton bgColorButton = new JButton("Change Background Color");
+        JButton textColorButton = new JButton("Change Text Color");
+
+        displayArea = new JTextArea(10, 30);
+        displayArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+
+        addButton.addActionListener(e -> addBook());
+        issueButton.addActionListener(e -> issueBook());
+        returnButton.addActionListener(e -> returnBook());
+        displayButton.addActionListener(e -> displayBooks());
+
+        // Action listeners for color buttons
+        bgColorButton.addActionListener(e -> changeBackgroundColor(frame));
+        textColorButton.addActionListener(e -> changeTextColor());
+
+        frame.add(titleLabel);
+        frame.add(titleField);
+        frame.add(authorLabel);
+        frame.add(authorField);
+        frame.add(addButton);
+        frame.add(issueButton);
+        frame.add(returnButton);
+        frame.add(displayButton);
+        frame.add(bgColorButton);
+        frame.add(textColorButton);
+        frame.add(scrollPane);
+
+        frame.setVisible(true);
+    }
+
+    private void addBook() {
+        String title = titleField.getText().trim();
+        String author = authorField.getText().trim();
+        if (!title.isEmpty() && !author.isEmpty()) {
+            library.addBook(title, author);
+            titleField.setText("");
+            authorField.setText("");
+            displayBooks();
+            JOptionPane.showMessageDialog(null, "Book added successfully.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter both title and author.");
+        }
+    }
+
+    private void issueBook() {
+        String title = titleField.getText().trim();
+        if (!title.isEmpty()) {
+            if (library.issueBook(title)) {
+                displayBooks();
+                JOptionPane.showMessageDialog(null, "Book issued successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Book not found or already issued.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter a title.");
+        }
+    }
+
+    private void returnBook() {
+        String title = titleField.getText().trim();
+        if (!title.isEmpty()) {
+            if (library.returnBook(title)) {
+                displayBooks();
+                JOptionPane.showMessageDialog(null, "Book returned successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Book not found or not issued.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter a title.");
+        }
+    }
+
+    private void displayBooks() {
+        displayArea.setText("");
+        for (Book book : library.getBooks()) {
+            displayArea.append(book.toString() + "\n");
+        }
+    }
+
+    // Method to change background color
+    private void changeBackgroundColor(JFrame frame) {
+        Color newColor = JColorChooser.showDialog(frame, "Choose Background Color", frame.getBackground());
+        if (newColor != null) {
+            frame.getContentPane().setBackground(newColor);
+        }
+    }
+
+    // Method to change text color
+    private void changeTextColor() {
+        Color newColor = JColorChooser.showDialog(null, "Choose Text Color", displayArea.getForeground());
+        if (newColor != null) {
+            displayArea.setForeground(newColor);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(LibraryManagementGUI::new);
+    }
+}
